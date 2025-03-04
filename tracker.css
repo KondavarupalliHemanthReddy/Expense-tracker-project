@@ -1,0 +1,114 @@
+body{
+    font-family: "Comfortaa", sans-serif;
+} 
+.header{
+    background:#476EF7;
+    padding-left: 25px;
+    font-size: x-large;
+    color: white;
+}
+.input-form{
+    display: flex;
+    justify-content: space-around;
+    width: 90%;
+    border-radius: 8px;
+    margin: auto;
+    box-shadow: 0px 0px 10px #476EF7;
+    margin-top: 15px;
+    padding: 25px 0px;
+
+}
+
+#add-button{
+    background:#476EF7;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: x-large;
+    font-weight: 600;
+    color: white;
+
+}
+.inputs{
+    width: 30%;
+}
+.cards{
+    display: flex;
+    width: 90%;
+    margin: auto;
+    justify-content: space-between;
+
+}
+.card{
+    background:#476EF7;
+    width: 18rem;
+   
+}
+.card-body{
+    color: white;
+}
+.Transaction-table{
+   font-weight: 600;
+    width: 90%;
+    margin: auto;
+    border-radius: 8px;
+    border: 1px solid black;
+    overflow: hidden;
+    box-shadow: 0px 4px 4px rgba(0,0,0,0.5);
+    padding: 0;
+}
+#header-row{
+    background:#476EF7;
+     
+}
+#header-row th{
+    padding: 15px 10px;
+    color: white;
+}
+.delete-button,.delete-button:hover{
+    background: red;
+    border: 1px solid black;
+    width: 57px;
+    height: 50px;
+    border-radius: 50%;
+}
+@media only screen  and (max-width:768px){
+    .input-form{
+        display: flex;
+        flex-direction: column;
+        padding: 30px 5px; 
+        margin-top: 30px;
+       
+    }
+    .inputs{
+        width: 90%;
+        margin: auto;
+        height:80px;
+    }
+    #add-button{
+        margin: auto;
+        margin-top: 20px;
+    }
+    .header{
+        height:90px;
+    }
+    .cards{
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    .card{
+        width:100%;
+    }
+    .card-body{
+        color: white;
+        margin: auto;
+    }
+    #add-button{
+        height: 60px;
+        width:170px;
+        border-radius:0%;
+    }
+   
+
+}
