@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
+    <title>Expense tracker</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -77,82 +77,85 @@
     </tr>  -->
    </table>
    <script>
-    let table=document.getElementById('table')
-    console.log(table)
-    function printValues(){
-      let date=document.getElementsByClassName('dateInput')[0].value
-      let amount=document.getElementsByClassName('amountInput')[0].value
-      let transaction=document.getElementsByClassName('transactionType')[0].value
-      if (!date || !amount || transaction === "Transaction type") {
-    alert("Please enter all fields: Date, Amount, and select a Transaction Type.");
-    return;
-  }
-      let row=document.createElement('tr')
+  
+    let table = document.getElementById('table');
 
-      let amountcell=document.createElement('td')
-      amountcell.innerText=amount;
-
-      let transactioncell=document.createElement('td')
-      transactioncell.innerText=transaction;
-
-      let datecell=document.createElement('td')
-      datecell.innerText=date;
-
-      let bincell=document.createElement('td')
-      let deleteButton=document.createElement('button')
-      let binImage=document.createElement('img')
-      binImage.src='./recycle.png'
-      binImage.style.width='35px'
-
-    deleteButton.appendChild(binImage)
-    deleteButton.classList.add('delete-button')
-    deleteButton.onclick=()=>deleterow(row)
-      bincell.appendChild(deleteButton)
-      console.log(amountcell,transactioncell,datecell);
-
-      row.appendChild(amountcell)
-      row.appendChild(transactioncell)
-      row.appendChild(datecell)
-      row.appendChild(bincell)
-      
-      table.appendChild(row)
-      let totalIncome=document.getElementById('totalIncome').innerText
-      let totalexpense=document.getElementById('expense').innerText
-      let totalbalance=document.getElementById('balance').innerText
-      
-      if (transaction == 'income'){
-        if(totalIncome == '0'){
-          document.getElementById('totalIncome').innerText=amount
-        }
-        else{
-          document.getElementById('totalIncome').innerText=parseInt(amount)+parseInt(totalIncome)
-        }
-        if (balance=='0'){
-          document.getElementById('balance').innerText=amount
-        }
-        else{
-          document.getElementById('balance').innerText=parseInt(totalbalance)+parseInt(amount)
-        }
-      }
-      else if (transaction=='expense'){
-        if(totalexpense == '0'){
-          document.getElementById('expense').innerText=amount
-        }
-        else{
-          document.getElementById('expense').innerText=parseInt(amount)+parseInt(totalexpense)
-        }
-        if (balance=='0'){
-          document.getElementById('balance').innerText=amount
-        }
-        else{
-          document.getElementById('balance').innerText=parseInt(totalbalance)-parseInt(amount)
-        }
-      }
-      
+    // Load expenses from local storage on page load
+    window.onload = function() {
+        const savedExpenses = JSON.parse(localStorage.getItem('expenses')) || [];
+        savedExpenses.forEach(expense => addRow(expense.amount, expense.type, expense.date));
+        updateTotals();
     }
-   function deleterow(row){
-    row.remove()
-   }
+    function printValues() {
+        let date = document.getElementsByClassName('dateInput')[0].value;
+        let amount = document.getElementsByClassName('amountInput')[0].value;
+        let transaction = document.getElementsByClassName('transactionType')[0].value;
+
+        if (!date || !amount || transaction === 'Transaction type') {
+            alert('Please enter all fields: Date, Amount, and select a Transaction Type.');
+            return;
+        }
+
+        addRow(amount, transaction, date);
+        saveExpense(amount, transaction, date);
+        updateTotals();
+    }
+
+    function addRow(amount, transaction, date) {
+        let row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${amount}</td>
+            <td>${transaction}</td>
+            <td>${date}</td>
+            <td><button class="btn delete-button" onclick="deleteRow(this)">🗑️</button></td>`;
+        table.appendChild(row);
+    }
+
+    function deleteRow(button) {
+        let row = button.parentNode.parentNode;
+        row.remove();
+        updateTotals();
+        saveAllExpenses();
+    }
+
+    function saveExpense(amount, transaction, date) {
+        const savedExpenses = JSON.parse(localStorage.getItem('expenses')) || [];
+        savedExpenses.push({ amount, type: transaction, date });
+        localStorage.setItem('expenses', JSON.stringify(savedExpenses));
+    }
+
+    function saveAllExpenses() {
+        const rows = Array.from(table.querySelectorAll('tr:not(#header-row)'));
+        const expenses = rows.map(row => {
+            const cells = row.getElementsByTagName('td');
+            return {
+                amount: cells[0].innerText,
+                type: cells[1].innerText,
+                date: cells[2].innerText
+            };
+        });
+        localStorage.setItem('expenses', JSON.stringify(expenses));
+    }
+
+    function updateTotals() {
+        let totalIncome = 0;
+        let totalExpense = 0;
+        const rows = Array.from(table.querySelectorAll('tr:not(#header-row)'));
+        rows.forEach(row => {
+            const amount = parseInt(row.getElementsByTagName('td')[0].innerText);
+            const type = row.getElementsByTagName('td')[1].innerText;
+            if (type === 'income') {
+                totalIncome += amount;
+            } else if (type === 'expense') {
+                totalExpense += amount;
+            }
+        });
+        const totalBalance = totalIncome - totalExpense;
+        document.getElementById('totalIncome').innerText = totalIncome;
+        document.getElementById('expense').innerText = totalExpense;
+        document.getElementById('balance').innerText = totalBalance;
+    }
+</script>
    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>

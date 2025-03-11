@@ -109,6 +109,9 @@ body{
         width:170px;
         border-radius:0%;
     }
+   .Transaction-table{
+    margin-bottom: 20px;
+   }
    
 
 }
